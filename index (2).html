@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Minha Pessoa Favorita ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        romance: {
+                            50: '#fff5f6',
+                            100: '#ffe6e9',
+                            200: '#ffd1d7',
+                            300: '#ffa3ae',
+                            400: '#ff667a',
+                            500: '#f73351',
+                            600: '#e41437',
+                            700: '#bf0a29',
+                            800: '#9e0c25',
+                            900: '#830f24',
+                            950: '#49020e',
+                        },
+                        gold: {
+                            glow: '#ffdf7a',
+                            glowbg: '#ffd11a',
+                            borderglow: '#ffea99',
+                            border: '#d4af37'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                        cursive: ['"Great Vibes"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #03010e; 
+            font-family: 'Montserrat', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: background-color 1.5s ease-in-out;
+        }
+
+        .glass-card {
+            background: rgba(255, 245, 246, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 163, 174, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(10, 5, 25, 0.5);
+        }
+
+        .gold-border {
+            position: relative;
+        }
+        .gold-border::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, #d4af37, #dfb73c, #fae16c, #e6bb0b, #dfb73c, #d4af37) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        @keyframes goldPulse {
+            0% { box-shadow: 0 0 15px rgba(223, 183, 106, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(223, 183, 106, 0.5); }
+        }
+        .gold-glow {
+            animation: goldPulse 3s infinite alternate;
+        }
+
+        .page-transition {
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+        .page-hidden {
+            display: none !important;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .page-active {
+            display: flex !important;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cursor-blink::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .floral-decor {
+            filter: drop-shadow(0 0 8px rgba(255, 73, 109, 0.5));
+            pointer-events: none;
+            transition: all 1s ease-in-out;
+        }
+
+        #heart-portal-container {
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(3, 1, 14, 0);
+            transition: background 1.2s ease-in-out;
+        }
+        #heart-portal-container.overlay-dark {
+            background: rgba(3, 1, 14, 0.95);
+            pointer-events: auto;
+        }
+        .portal-heart {
+            transform: scale(0);
+            transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .portal-heart.active {
+            transform: scale(35);
+        }
+        .portal-heart.open {
+            transform: scale(0);
+            transition: transform 1.8s cubic-bezier(0.7, -0.3, 0.31, 1.1), opacity 1s ease-in-out;
+        }
+
+        .love-card-container {
+            perspective: 1000px;
+        }
+
+        .gift-box {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .gift-box.shake {
+            animation: shakeBox 0.5s infinite alternate;
+        }
+        @keyframes shakeBox {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-5deg); }
+        }
+
+        .floating-word {
+            pointer-events: none;
+            position: absolute;
+            font-size: 1.1rem;
+            color: rgba(255, 73, 109, 0.3);
+            animation: floatUpDown 5s linear forwards;
+        }
+        @keyframes floatUpDown {
+            0% { transform: translateY(100px) scale(0.6); opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(-150px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <canvas id="intro-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div id="floral-decor-top" class="floral-decor fixed -top-12 -left-12 w-32 h-48 z-20 opacity-0 pointer-events-none">
+        <svg viewBox="0 0 100 150" class="w-full h-full" style="color: currentColor;"><path d="M10,10 Q30,70 70,10 Q95,5 L10,10 Z M30,40 Q50,90 90,60" stroke="rgba(255,163,174,0.3)" stroke-width="2" fill="none"/></svg>
+    </div>
+    <div id="floral-decor-bottom" class="floral-decor fixed -bottom-12 -right-12 w-32 h-48 z-20 opacity-0 pointer-events-none" style="transform: rotate(180deg);">
+        <svg viewBox="0 0 100 150" class="w-full h-full" style="color: currentColor;"><path d="M10,10 Q30,70 70,10 Q95,5 L10,10 Z M30,40 Q50,90 90,60" stroke="rgba(255,163,174,0.3)" stroke-width="2" fill="none"/></svg>
+    </div>
+
+    <main class="flex-grow flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full max-w-5xl mx-auto">
+
+        <!-- 🟦 PÁGINA 1 - TELA DE ACESSO -->
+        <section id="page-1" class="page-transition page-active w-full flex flex-col items-center justify-center">
+            <div class="glass-card gold-border gold-glow rounded-3xl p-6 md:p-10 text-center flex flex-col items-center space-y-6 w-full max-w-md relative overflow-hidden h-auto">
+                <div class="w-24 h-24 flex items-center justify-center active:scale-95 transition-all duration-300 cursor-pointer">
+                    <svg class="w-full h-full text-blue-500 fill-current filter drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] animate-pulse" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <h1 class="font-serif text-2xl md:text-3xl text-white font-semibold leading-relaxed px-2">
+                    Para uma pessoa super especial da minha vida
+                </h1>
+                <p class="text-xs md:text-sm text-blue-200 mt-2 font-light leading-relaxed px-2">
+                    Existe uma data muito importante que representa um momento especial. Digite a senha para continuar.
+                </p>
+                <div class="w-full relative max-w-xs pt-2">
+                    <input type="text" id="password-input" placeholder="DDMMAAAA" class="w-full text-center bg-black/40 text-white placeholder-blue-300/30 font-semibold tracking-widest p-3 px-4 rounded-xl border border-blue-400/40 focus:outline-none focus:ring-1 focus:ring-blue-400/50 text-sm" />
+                </div>
+                <p id="error-message" class="text-sm text-red-400 font-semibold h-4 transition-all opacity-0">
+                    Senha incorreta... Pense com o coração! 💙
+                </p>
+                <button onclick="verificarSenha()" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-blue-400 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 text-white font-medium text-sm shadow-[0_5px_15px_rgba(3,105,161,0.3)]">
+                    <span>Acessar</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 🟥 PÁGINA 2 - FELIZ ANIVERSÁRIO -->
+        <section id="page-2" class="page-transition page-hidden w-full flex flex-col items-center">
+            <div class="glass-card gold-border gold-glow rounded-3xl p-6 md:p-8 w-full flex flex-col items-center space-y-6 max-w-xl text-center">
+                <h1 class="font-serif text-3xl md:text-4xl text-amber-400 font-serif italic">
+                    Feliz Aniversário, Meu Amorrrrr ❤️
+                </h1>
+                <div class="w-full bg-black/30 rounded-2xl p-4 md:p-6 border border-romance-400/10 shadow-inner overflow-y-auto max-h-[42vh]">
+                    <p id="typewriter-text" class="text-romance-50 text-sm md:text-base leading-relaxed font-light cursor-blink whitespace-pre-line text-left"></p>
+                </div>
+                <button id="btn-goto-p3" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-romance-600 to-romance-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 opacity-0 pointer-events-none transition-opacity duration-1000 text-white">
+                    <span>Continuar</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 🟥 PÁGINA 3 - O QUE EU AMO EM VOCÊ -->
+        <section id="page-3" class="page-transition page-hidden w-full flex flex-col items-center">
+            <div class="w-full flex flex-col items-center space-y-4 max-w-xl text-center">
+                <div>
+                    <h2 class="text-2xl md:text-3xl text-amber-400 font-semibold font-serif">O Que Eu Amo Em Você</h2>
+                    <p id="p3-instruction" class="text-sm text-romance-200 mt-2">Toque no botão abaixo para descobrir cada detalhe...</p>
+                </div>
+                <div id="cards-container" class="grid grid-cols-1 gap-3 sm:grid-cols-2 p-1 w-full overflow-y-auto max-h-[40vh]"></div>
+                <button id="btn-reveal-quality" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-romance-600 to-romance-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center text-white font-medium">
+                    <span id="txt-reveal-quality">Descobrir Motivo</span>
+                </button>
+                <button id="btn-goto-p4" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-romance-600 to-romance-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 opacity-0 pointer-events-none transition-opacity duration-1000 text-white">
+                    <span>Próxima Surpresa</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 🟥 PÁGINA 4 - PRESENTE -->
+        <section id="page-4" class="page-transition page-hidden w-full flex flex-col items-center">
+            <div class="glass-card gold-border gold-glow rounded-3xl p-6 md:p-8 w-full flex flex-col items-center space-y-6 max-w-md text-center">
+                <h2 class="text-2xl md:text-3xl text-amber-400 font-semibold font-serif">Hoje, Meu Presente Para Você</h2>
+                <div class="my-6 flex justify-center items-center relative w-full h-40">
+                    <div id="gift-box-element" class="gift-box shake cursor-pointer">
+                        <svg viewBox="0 0 140 140" class="w-full h-full fill-current">
+                            <rect x="20" y="50" width="100" height="70" rx="4" fill="#f73351" stroke="#dfb73c" stroke-width="2"/>
+                            <rect x="15" y="35" width="110" height="20" rx="3" fill="#e41437" stroke="#dfb73c" stroke-width="2"/>
+                            <rect x="62" y="35" width="16" height="85" fill="#dfb73c"/>
+                            <rect x="20" y="75" width="100" height="16" fill="#dfb73c"/>
+                            <path d="M65,35 C45,15 40,35 65,35 Z" fill="none" stroke="#dfb73c" stroke-width="5"/>
+                            <path d="M75,35 C95,15 100,35 75,35 Z" fill="none" stroke="#dfb73c" stroke-width="5"/>
+                        </svg>
+                    </div>
+                    <div class="absolute w-24 h-24 bg-amber-400/30 blur-xl rounded-full opacity-0 scale-50 transition-all duration-1000 pointer-events-none" id="gift-glow"></div>
+                </div>
+                <p id="gift-text" class="text-sm text-romance-100 leading-relaxed">Toque no presente acima para abrir seu conteúdo mágico e liberar meus sentimentos reais por você!</p>
+                <button id="btn-goto-p5" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-romance-600 to-romance-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 opacity-0 pointer-events-none transition-opacity duration-1000 text-white">
+                    <span>Continuar</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 🟥 PÁGINA 5 - PROMESSA -->
+        <section id="page-5" class="page-transition page-hidden w-full flex flex-col items-center">
+            <div class="glass-card gold-border gold-glow rounded-3xl p-6 md:p-8 w-full flex flex-col items-center space-y-6 max-w-xl text-center">
+                <h2 class="text-2xl md:text-3xl text-amber-400 font-semibold font-serif">Minha Promessa Para Você</h2>
+                <div class="w-full bg-black/30 rounded-2xl p-4 md:p-6 border border-amber-500/20 overflow-y-auto max-h-[42vh] text-left">
+                    <p id="promise-text" class="text-slate-200 text-sm md:text-base leading-relaxed font-light cursor-blink whitespace-pre-line"></p>
+                </div>
+                <button id="btn-goto-final" class="w-full max-w-xs py-3.5 px-6 rounded-xl bg-gradient-to-r from-romance-600 to-romance-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 opacity-0 pointer-events-none transition-opacity duration-1000 text-white">
+                    <span>Última Mensagem</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 🟥 PÁGINA FINAL -->
+        <section id="page-final" class="page-transition page-hidden w-full flex flex-col items-center">
+            <div class="glass-card gold-border gold-glow rounded-3xl p-6 md:p-10 text-center flex flex-col items-center space-y-6 w-full max-w-md relative overflow-hidden h-auto">
+                <div class="w-20 h-20 active:scale-95 transition-all duration-300 cursor-pointer">
+                    <svg class="w-full h-full text-romance-500 fill-current filter drop-shadow-[0_0_15px_rgba(247,51,81,0.6)] animate-pulse" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <h1 class="font-serif text-3xl text-amber-400 italic">Para Sempre</h1>
+                <p class="text-sm text-romance-100 font-light leading-relaxed px-2">
+                    Obrigado por ser a melhor parte do meu dia. Este site ficará sempre ativo como um pequeno monumento ao que sinto por ti.
+                </p>
+                <div class="text-xs text-romance-300 font-semibold tracking-widest pt-2">
+                    EU AMO VOCÊ ❤️
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full text-center py-4 text-[10px] text-slate-500 tracking-widest uppercase relative z-10">
+        Feito com Amor por nikolas &copy; 2026
+    </footer>
+
+    <div id="heart-portal-container" class="fixed inset-0 flex items-center justify-center select-none">
+        <svg id="portal-heart-svg" class="portal-heart w-20 h-20 text-romance-600 fill-current" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+    </div>
+
+    <script>
+        const textoAniversario = `Hoje é um dos dias mais especiais do ano, porque é o seu dia. Quero que saiba o quanto você é importante para em minha vida.\n\nCada momento ao seu lado é um presente e construir memórias contigo é a minha maior alegria. Você tem o sorriso mais lindo e o coração mais generoso que conheço.\n\nQue este novo ano traga chuva de bênçãos, sorrisos eternos e que todos os seus sonhos mais profundos se tornem realidade. Estarei sempre aqui para te apoiar, torcer por você e te amar.\n\nFeliz Aniversário, Minha Pessoa Favorita! 🎉❤️`;
+
+        const motivosAmor = [
+            "O seu sorriso radiante que ilumina até os meus dias mais cinzentos.",
+            "A forma carinhosa e paciente como cuida de mim.",
+            "A sua personalidade única que me fez me apaixonar por você..",
+            "O som da sua risada, que é a minha música favorita.",
+            "O jeito que você consegue transformar qualquer momento especial.",
+            "O carinho que você demonstra nos pequenos detalhes."
+        ];
+
+        const textoPromessa = `Prometo estar quando precisar, segurando a tua mão nos momentos difíceis e celebrando de pé todas as tuas vitórias.\n\nPrometo cultivar o nosso amor todos os dias com paciência, respeito, lealdade e pequenos gestos de carinho.\n\nPrometo ser o teu porto seguro, o teu ouvinte mais atento e o teu eterno fã número um.\n\nMinha promessa é cuidar do teu coração com toda a ternura que ele merece. Para sempre. 💍❤️\n\ne nunca desistir de nós.`;
+
+        function verificarSenha() {
+            const inputElement = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            const senhaLimpa = inputElement.value.replace(/\D/g, '');
+
+            if (senhaLimpa === "041026" || senhaLimpa === "04102026") {
+                errorMessage.classList.add('opacity-0');
+                executarTransicaoPortal('page-1', 'page-2', '#f73351', () => {
+                    document.getElementById('floral-decor-top').classList.remove('opacity-0');
+                    document.getElementById('floral-decor-bottom').classList.remove('opacity-0');
+                    iniciarEfeitoMaquinaEscrever('typewriter-text', textoAniversario, () => {
+                        const btn = document.getElementById('btn-goto-p3');
+                        btn.classList.remove('opacity-0', 'pointer-events-none');
+                    });
+                });
+            } else {
+                errorMessage.classList.remove('opacity-0');
+                inputElement.classList.add('border-red-500');
+                setTimeout(() => inputElement.classList.remove('border-red-500'), 500);
+            }
+        }
+
+        function executarTransicaoPortal(idPaginaAtual, idProximaPagina, corPortal, callbackPos) {
+            const container = document.getElementById('heart-portal-container');
+            const svgHeart = document.getElementById('portal-heart-svg');
+            
+            svgHeart.style.color = corPortal;
+            container.classList.add('overlay-dark');
+            svgHeart.classList.add('active');
+
+            setTimeout(() => {
+                document.getElementById(idPaginaAtual).classList.remove('page-active');
+                document.getElementById(idPaginaAtual).classList.add('page-hidden');
+                
+                document.getElementById(idProximaPagina).classList.remove('page-hidden');
+                document.getElementById(idProximaPagina).classList.add('page-active');
+                
+                svgHeart.classList.remove('active');
+                svgHeart.classList.add('open');
+                container.classList.remove('overlay-dark');
+
+                setTimeout(() => {
+                    svgHeart.classList.remove('open');
+                    if(callbackPos) callbackPos();
+                }, 800);
+            }, 1200);
+        }
+
+        function iniciarEfeitoMaquinaEscrever(idElemento, texto, callbackFinal) {
+            const el = document.getElementById(idElemento);
+            el.textContent = '';
+            let i = 0;
+            el.classList.add('cursor-blink');
+            
+            function digitar() {
+                if (i < texto.length) {
+                    el.textContent += texto.charAt(i);
+                    i++;
+                    el.parentElement.scrollTop = el.parentElement.scrollHeight;
+                    setTimeout(digitar, 30);
+                } else {
+                    el.classList.remove('cursor-blink');
+                    if (callbackFinal) callbackFinal();
+                }
+            }
+            digitar();
+        }
+
+        document.getElementById('btn-goto-p3').addEventListener('click', () => {
+            executarTransicaoPortal('page-2', 'page-3', '#ffdf7a', () => {
+                gerarPalavrasFlutuantes();
+            });
+        });
+
+        let indiceQualidade = 0;
+        document.getElementById('btn-reveal-quality').addEventListener('click', () => {
+            if (indiceQualidade < motivosAmor.length) {
+                const container = document.getElementById('cards-container');
+                document.getElementById('p3-instruction').classList.add('hidden');
+                
+                const card = document.createElement('div');
+                card.className = 'love-card-container w-full p-1';
+                card.innerHTML = `
+                    <div class="glass-card gold-border rounded-xl p-4 flex items-center justify-center min-h-[70px]">
+                        <p class="text-xs md:text-sm text-white font-medium text-center">${motivosAmor[indiceQualidade]}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+                container.scrollTop = container.scrollHeight;
+                indiceQualidade++;
+                
+                if (indiceQualidade === motivosAmor.length) {
+                    document.getElementById('btn-reveal-quality').classList.add('hidden');
+                    document.getElementById('btn-goto-p4').classList.remove('opacity-0', 'pointer-events-none');
+                }
+            }
+        });
+
+        document.getElementById('btn-goto-p4').addEventListener('click', () => {
+            executarTransicaoPortal('page-3', 'page-4', '#f73351');
+        });
+
+        document.getElementById('gift-box-element').addEventListener('click', function() {
+            this.classList.remove('shake');
+            this.style.transform = 'scale(0.8) rotateY(180deg)';
+            this.style.opacity = '0';
+            this.style.pointerEvents = 'none';
+            
+            document.getElementById('gift-glow').classList.remove('opacity-0', 'scale-50');
+            document.getElementById('gift-glow').classList.add('scale-150', 'opacity-100');
+
+            setTimeout(() => {
+                document.getElementById('gift-text').innerHTML = "<strong>Seu presente especial:</strong><br>Um cupom eterno válido para cafuné ilimitado, jantares românticos e todo o meu amor verdadeiro pro resto da vida! 🎫❤️";
+                document.getElementById('btn-goto-p5').classList.remove('opacity-0', 'pointer-events-none');
+            }, 500);
+        });
+
+        document.getElementById('btn-goto-p5').addEventListener('click', () => {
+            executarTransicaoPortal('page-4', 'page-5', '#d4af37', () => {
+                iniciarEfeitoMaquinaEscrever('promise-text', textoPromessa, () => {
+                    document.getElementById('btn-goto-final').classList.remove('opacity-0', 'pointer-events-none');
+                });
+            });
+        });
+
+        document.getElementById('btn-goto-final').addEventListener('click', () => {
+            executarTransicaoPortal('page-5', 'page-final', '#f73351', () => {
+                dispararChuvaCoracoesFinais();
+            });
+        });
+
+        const canvas = document.getElementById('intro-canvas');
+        const ctx = canvas.getContext('2d');
+        let particulas = [];
+
+        function redimensionarCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', redimensionarCanvas);
+        redimensionarCanvas();
+
+        class ParticulaCoracao {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 20;
+                this.size = Math.random() * 5 + 4;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = -(Math.random() * 1 + 0.5);
+                this.opacity = Math.random() * 0.4 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = '#f73351';
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size/2, this.y - this.size/2, this.x - this.size, this.y + this.size/3, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size/3, this.x + this.size/2, this.y - this.size/2, this.x, this.y);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 30; i++) particulas.push(new ParticulaCoracao());
+
+        function animarFundo() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particulas.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animarFundo);
+        }
+        animarFundo();
+
+        function gerarPalavrasFlutuantes() {
+            const palavras = ["Amor", "Vida", "Princesa", "Meu Bem", "Anjo", "Te Amo", "Linda"];
+            setInterval(() => {
+                const p3 = document.getElementById('page-3');
+                if (p3.classList.contains('page-active')) {
+                    const el = document.createElement('div');
+                    el.className = 'floating-word font-serif italic';
+                    el.textContent = palavras[Math.floor(Math.random() * palavras.length)];
+                    el.style.left = Math.random() * 80 + 10 + '%';
+                    p3.appendChild(el);
+                    setTimeout(() => el.remove(), 5000);
+                }
+            }, 2000);
+        }
+
+        function dispararChuvaCoracoesFinais() {
+            setInterval(() => {
+                const finalSec = document.getElementById('page-final');
+                if (finalSec.classList.contains('page-active')) {
+                    const c = document.createElement('div');
+                    c.className = 'absolute text-xl pointer-events-none';
+                    c.innerHTML = '❤️';
+                    c.style.left = Math.random() * 100 + '%';
+                    c.style.top = '-20px';
+                    c.style.transition = 'transform 4s linear';
+                    finalSec.appendChild(c);
+                    setTimeout(() => { c.style.transform = `translateY(${window.innerHeight + 50}px)`; }, 50);
+                    setTimeout(() => c.remove(), 4000);
+                }
+            }, 400);
+        }
+
+        document.getElementById('password-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') verificarSenha();
+        });
+    </script>
+</body>
+</html>
